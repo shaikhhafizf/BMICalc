@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import {
   Button,
+  Keyboard,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -17,6 +18,42 @@ export default function App() {
   const [inch, setInch] = useState(0);
   const [weight, setWeight] = useState(0);
   const [unitSys, setUnitSys] = useState("S");
+  const [BMI, setBMI] = useState(0);
+  const calculate = () => {
+    Keyboard.dismiss();
+    if (height <= 0 || weight <= 0 || (unitSys === "S" && inch <= 0)) {
+      return;
+    } else {
+      if (unitSys === "S") {
+        console.log(
+          parseInt(height) * 12 + inch,
+          weight,
+          (weight * 703) /
+            ((12 * parseInt(height) + parseInt(inch)) *
+              (12 * parseInt(height) + parseInt(inch)))
+        );
+        setBMI(
+          Math.round(
+            (parseInt(weight) /
+              ((12 * parseInt(height) + parseInt(inch)) *
+                (12 * parseInt(height) + parseInt(inch)))) *
+              703 *
+              10
+          ) / 10
+        );
+      } else {
+        setBMI(
+          Math.round(
+            (parseInt(weight) / parseInt(height) / parseInt(height)) *
+              10000 *
+              10
+          ) / 10
+        ); //100*100 is to convert cm to m
+      }
+      console.log(BMI);
+      return;
+    }
+  };
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView
@@ -111,20 +148,15 @@ export default function App() {
             <Text style={styles.unit}>{unitSys === "M" ? "KG" : "LB"}</Text>
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.calcBtn}
-          onPress={() => {
-            console.log(height);
-          }}
-        >
+        <TouchableOpacity style={styles.calcBtn} onPress={calculate}>
           <Text style={styles.calcBtnText}>Calculate</Text>
         </TouchableOpacity>
-
         {height <= 0 || weight <= 0 || (unitSys === "S" && inch <= 0) ? (
           <Text style={styles.err}>
             Please enter your proper weight and height to calculate your BMI
           </Text>
         ) : null}
+        {BMI <= 0 ? null : <Text style={styles.ans}>Your BMI is {BMI}</Text>}
       </ScrollView>
     </SafeAreaView>
   );
@@ -135,6 +167,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: "#FCFCFC",
+    marginTop: StatusBar.currentHeight,
   },
   topBar: {
     flexDirection: "row",
@@ -168,7 +201,7 @@ const styles = StyleSheet.create({
     color: "#0F8B8D",
   },
   inputBox: {
-    width: "50%",
+    width: "60%",
   },
   inputFieldBox: {
     width: "100%",
@@ -214,5 +247,10 @@ const styles = StyleSheet.create({
     color: "#A30000",
     fontSize: 12,
     marginTop: 16,
+  },
+  ans: {
+    fontSize: 32,
+    fontWeight: "500",
+    marginTop: 64,
   },
 });
