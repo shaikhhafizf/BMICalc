@@ -68,6 +68,7 @@ export default function App() {
               setHeight(0);
               setWeight(0);
               setInch(0);
+              setBMI(0);
               setUnitSys("S");
             }}
           >
@@ -90,6 +91,7 @@ export default function App() {
               setHeight(0);
               setWeight(0);
               setInch(0);
+              setBMI(0);
               setUnitSys("M");
             }}
           >
